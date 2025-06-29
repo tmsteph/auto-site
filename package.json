@@ -1,0 +1,11 @@
+{
+  "name": "auto-site",
+  "type": "module",
+  "scripts": { "build": "next build", "dev": "next dev" },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "openai": "^4.0.0"
+  }
+}
