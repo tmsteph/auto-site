@@ -1,36 +1,52 @@
+import { useState } from 'react';
 import Head from 'next/head';
 
 export default function Home() {
-  const today = new Date().toISOString().split('T')[0];
+  const [evolving, setEvolving] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleEvolve = async () => {
+    setEvolving(true);
+    setMessage('Triggering evolution... 🧠');
+
+    const res = await fetch('/api/evolve', { method: 'POST' });
+    const data = await res.json();
+
+    if (res.ok) {
+      setMessage('✅ Evolution started! Changes will deploy in ~60 seconds.');
+    } else {
+      setMessage('❌ Error: ' + (data?.error || 'Unknown'));
+    }
+
+    setEvolving(false);
+  };
 
   return (
     <>
       <Head>
         <title>My Auto-Improving Site</title>
-        <meta name="description" content="This copy will evolve automatically 🤖" />
       </Head>
-      <main style={{ padding: '2rem', fontFamily: 'sans-serif', lineHeight: 1.6 }}>
+      <main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
         <h1>Welcome to my evolving website! 🚀</h1>
-        <blockquote><strong>Last AI update:</strong> {today}</blockquote>
+        <blockquote><strong>Last AI update:</strong> {new Date().toISOString().split('T')[0]}</blockquote>
         <p>This site rewrites itself daily using GPT-4o.</p>
-        <p>
-          Stay tuned for smarter copy, better design, and new experiments in how a site can grow on its own.
-        </p>
+        <p>Or evolve it now 👇</p>
         <button
+          onClick={handleEvolve}
+          disabled={evolving}
           style={{
+            background: evolving ? '#aaa' : '#0070f3',
+            color: 'white',
             padding: '0.75rem 1.5rem',
             fontSize: '1rem',
-            fontWeight: 'bold',
-            borderRadius: '8px',
             border: 'none',
-            background: '#0070f3',
-            color: 'white',
-            cursor: 'pointer',
-            marginTop: '1rem'
+            borderRadius: '8px',
+            cursor: evolving ? 'not-allowed' : 'pointer'
           }}
         >
-          Join the journey
+          {evolving ? 'Evolving...' : 'Auto-Evolve Now'}
         </button>
+        {message && <p style={{ marginTop: '1rem' }}>{message}</p>}
       </main>
     </>
   );
