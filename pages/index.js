@@ -30,6 +30,7 @@ export default function Home() {
         <h1>Welcome to my evolving website! 🚀</h1>
         <blockquote><strong>Last AI update:</strong> {new Date().toISOString().split('T')[0]}</blockquote>
         <p>This site rewrites itself daily using GPT-4o.</p>
+        <p>test</p>
         <p>Or evolve it now 👇</p>
         <button
           onClick={handleEvolve}
