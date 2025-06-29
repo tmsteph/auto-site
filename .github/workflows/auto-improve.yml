@@ -1,0 +1,25 @@
+name: Auto-Improve Site
+
+on:
+  schedule:
+    - cron: '0 8 * * *'       # every day 08:00 UTC
+  workflow_dispatch:          # manual run button
+
+jobs:
+  improve:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # allow push
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - name: Run improvement script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/autoimprove.js
+      - name: Commit & push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(ai): daily auto-improvement"
